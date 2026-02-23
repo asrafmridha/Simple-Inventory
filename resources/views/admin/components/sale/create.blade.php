@@ -4,232 +4,202 @@
 
 @section('content')
 
-<div class="shadow card">
+    <div class="shadow card">
 
-    <div class="text-white card-header bg-primary">
-        <h4 class="mb-0">Create Sale</h4>
-    </div>
+        <div class="text-white card-header bg-primary">
+            <h4 class="mb-0">Create Sale</h4>
+        </div>
 
-    {{-- ================= FORM ================= --}}
-    <form action="{{ route('sales.store') }}" method="POST">
-        @csrf
+        {{-- ================= FORM ================= --}}
+        <form action="{{ route('sales.store') }}" method="POST">
+            @csrf
 
-        <input type="hidden" id="rowIndex" value="0">
+            <input type="hidden" id="rowIndex" value="0">
 
-        <div class="card-body">
+            <div class="card-body">
 
-            {{-- ================= ERROR MESSAGE ================= --}}
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+                {{-- ================= ERROR MESSAGE ================= --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
 
-            {{-- ================= CUSTOMER SECTION ================= --}}
+                {{-- ================= CUSTOMER SECTION ================= --}}
 
-            <div class="mb-3 row">
+                <div class="mb-3 row">
 
-                <div class="col-md-4">
-                    <label class="form-label">Customer Phone <span class="text-danger">*</span></label>
-                    <input type="text"
-                           name="customer_phone"
-                           value="{{ old('customer_phone') }}"
-                           class="form-control"
-                           required>
-                    @error('customer_phone')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Customer Phone <span class="text-danger">*</span></label>
+                        <input type="text" id="customer_phone" name="customer_phone" value="{{ old('customer_phone') }}"
+                            class="form-control" required id="customer_phone">
+                        @error('customer_phone')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
 
-                <div class="col-md-4">
-                    <label class="form-label">Customer Name <span class="text-danger">*</span></label>
-                    <input type="text"
-                           name="customer_name"
-                           value="{{ old('customer_name') }}"
-                           class="form-control"
-                           required>
-                    @error('customer_name')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Customer Name <span class="text-danger">*</span></label>
+                        <input type="text" name="customer_name" value="{{ old('customer_name') }}" class="form-control"
+                            required id="customer_name">
+                        @error('customer_name')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
 
-                <div class="col-md-4">
-                    <label class="form-label">Address</label>
-                    <input type="text"
-                           name="customer_address"
-                           value="{{ old('customer_address') }}"
-                           class="form-control">
+                    <div class="col-md-4">
+                        <label class="form-label">Address</label>
+                        <input type="text" name="customer_address" value="{{ old('customer_address') }}"
+                            class="form-control">
+                    </div>
+
                 </div>
 
-            </div>
+                <hr>
 
-            <hr>
+                {{-- ================= PRODUCT TABLE ================= --}}
 
-            {{-- ================= PRODUCT TABLE ================= --}}
+                <div class="table-responsive">
 
-            <div class="table-responsive">
+                    <table class="table table-bordered" id="saleTable">
 
-                <table class="table table-bordered" id="saleTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Product <span class="text-danger">*</span></th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th width="80">Action</th>
+                            </tr>
+                        </thead>
 
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Product <span class="text-danger">*</span></th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                            <th width="80">Action</th>
-                        </tr>
-                    </thead>
+                        <tbody>
 
-                    <tbody>
+                            <tr>
 
-                        <tr>
+                                <td>
+                                    <select name="items[0][product_id]" class="form-control product" required>
 
-                            <td>
-                                <select name="items[0][product_id]"
-                                        class="form-control product"
+                                        <option value="">Select Product</option>
+
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}" data-price="{{ $product->sell_price }}"
+                                                data-stock="{{ $product->stock->quantity ?? 0 }}">
+                                                {{ $product->name }}
+                                                (Stock: {{ $product->stock->quantity ?? 0 }})
+                                            </option>
+                                        @endforeach
+
+                                    </select>
+
+                                    <small class="text-danger">
+                                        @error('items.0.product_id')
+                                            {{ $message }}
+                                        @enderror
+                                    </small>
+
+                                    <small class="text-danger stock-text"></small>
+
+                                </td>
+
+                                <td>
+                                    <input type="number" name="items[0][qty]" class="form-control qty" min="1"
                                         required>
 
-                                    <option value="">Select Product</option>
+                                    <small class="text-danger">
+                                        @error('items.0.qty')
+                                            {{ $message }}
+                                        @enderror
+                                    </small>
+                                </td>
 
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}"
-                                                data-price="{{ $product->sell_price }}"
-                                                data-stock="{{ $product->stock->quantity ?? 0 }}">
-                                            {{ $product->name }}
-                                            (Stock: {{ $product->stock->quantity ?? 0 }})
-                                        </option>
-                                    @endforeach
+                                <td>
+                                    <input type="number" class="form-control price" readonly>
+                                </td>
 
-                                </select>
+                                <td>
+                                    <input type="text" class="form-control rowTotal" readonly>
+                                </td>
 
-                                <small class="text-danger">
-                                    @error('items.0.product_id')
-                                        {{ $message }}
-                                    @enderror
-                                </small>
+                                <td>
+                                    <button type="button" class="btn btn-success addRow">
+                                        +
+                                    </button>
+                                </td>
 
-                                <small class="text-danger stock-text"></small>
+                            </tr>
 
-                            </td>
+                        </tbody>
 
-                            <td>
-                                <input type="number"
-                                       name="items[0][qty]"
-                                       class="form-control qty"
-                                       min="1"
-                                       required>
+                    </table>
 
-                                <small class="text-danger">
-                                    @error('items.0.qty')
-                                        {{ $message }}
-                                    @enderror
-                                </small>
-                            </td>
-
-                            <td>
-                                <input type="number"
-                                       class="form-control price"
-                                       readonly>
-                            </td>
-
-                            <td>
-                                <input type="text"
-                                       class="form-control rowTotal"
-                                       readonly>
-                            </td>
-
-                            <td>
-                                <button type="button"
-                                        class="btn btn-success addRow">
-                                    +
-                                </button>
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            {{-- ================= DISCOUNT + VAT ================= --}}
-
-            <div class="mt-3 row">
-
-                <div class="col-md-3">
-                    <label>Flat Discount</label>
-                    <input type="number"
-                           name="discount" id="discount"
-                           value="{{ old('discount',0) }}"
-                           class="form-control">
                 </div>
 
-                <div class="col-md-3">
-                    <label>VAT (%)</label>
-                    <input type="number"
-                           name="vat" id="vat"
-                           value="{{ old('vat',0) }}"
-                           class="form-control">
+                {{-- ================= DISCOUNT + VAT ================= --}}
+
+                <div class="mt-3 row">
+
+                    <div class="col-md-3">
+                        <label>Flat Discount</label>
+                        <input type="number" name="discount" id="discount" value="{{ old('discount', 0) }}"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>VAT (%)</label>
+                        <input type="number" name="vat" id="vat" value="{{ old('vat', 0) }}"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Paid Amount</label>
+                        <input type="number" name="paid_amount" value="{{ old('paid_amount', 0) }}" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Grand Total</label>
+                        <input type="text" id="grandTotal" name="total_amount" class="form-control" readonly>
+                    </div>
+
                 </div>
 
-                <div class="col-md-3">
-                    <label>Paid Amount</label>
-                    <input type="number"
-                           name="paid_amount"
-                           value="{{ old('paid_amount',0) }}"
-                           class="form-control">
-                </div>
+                <div class="mt-3">
 
-                <div class="col-md-3">
-                    <label>Grand Total</label>
-                    <input type="text"
-                           id="grandTotal"
-                           name="total_amount"
-                           class="form-control"
-                           readonly>
+                    <label>Payment Method</label>
+
+                    <select name="payment_method" class="form-control" required>
+
+                        <option value="">Select Method</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Bank">Bank</option>
+                        <option value="Mobile">Mobile</option>
+
+                    </select>
+
+                    @error('payment_method')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+
                 </div>
 
             </div>
 
-            <div class="mt-3">
+            <div class="text-right card-footer">
 
-                <label>Payment Method</label>
-
-                <select name="payment_method" class="form-control" required>
-
-                    <option value="">Select Method</option>
-                    <option value="Cash">Cash</option>
-                    <option value="Bank">Bank</option>
-                    <option value="Mobile">Mobile</option>
-
-                </select>
-
-                @error('payment_method')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+                <button type="submit" class="px-4 btn btn-primary">
+                    Submit Sale
+                </button>
 
             </div>
 
-        </div>
+        </form>
 
-        <div class="text-right card-footer">
-
-            <button type="submit" class="px-4 btn btn-primary">
-                Submit Sale
-            </button>
-
-        </div>
-
-    </form>
-
-</div>
+    </div>
 
 @endsection
 
@@ -345,7 +315,6 @@
         {{-- ================= CUSTOMER AUTO SEARCH ================= --}}
 
         $('#customer_phone').on('keyup', function() {
-
             let phone = $(this).val();
 
             if (phone.length >= 3) {

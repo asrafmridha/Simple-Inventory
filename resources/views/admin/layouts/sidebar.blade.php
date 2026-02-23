@@ -127,6 +127,47 @@
                 </li>
 
 
+                   <li class="nav-item has-treeview {{ request()->is('report*') ? 'menu-open' : '' }}">
+
+                    <a href="#" class="nav-link {{ request()->is('report*') ? 'active' : '' }}">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        <p>
+                            Report
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        {{-- Purchase History --}}
+                        <li class="nav-item">
+                            <a href="{{ route('financial.report') }}"
+                                class="nav-link {{ request()->routeIs('financial.report') ? 'active' : '' }}">
+
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Financial Report</p>
+
+                            </a>
+                        </li>
+
+
+
+                    </ul>
+                </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('expenses.index') }}"
+                                class="nav-link {{ request()->routeIs('expenses.index') ? 'active' : '' }}">
+
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Expense</p>
+
+                            </a>
+                        </li>
+
+
             </ul>
 
 
