@@ -10,4 +10,9 @@ class Product extends Model
         'name',
         'sell_price',
     ];
+
+    public function stock()
+    {
+        return $this->hasOne(Stock::class);
+    }
 }

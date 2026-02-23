@@ -47,11 +47,9 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item has-treeview
-    {{ request()->is('purchases*') ? 'menu-open' : '' }}">
+                <li class="nav-item has-treeview {{ request()->is('purchases*') ? 'menu-open' : '' }}">
 
-                    <a href="#" class="nav-link
-        {{ request()->is('purchases*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('purchases*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-box"></i>
 
@@ -89,10 +87,50 @@
                 </li>
 
 
+                <li class="nav-item has-treeview {{ request()->is('sale*') ? 'menu-open' : '' }}">
 
+                    <a href="#" class="nav-link {{ request()->is('sale*') ? 'active' : '' }}">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        <p>
+                            Sales
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        {{-- Purchase History --}}
+                        <li class="nav-item">
+                            <a href="{{ route('sales.index') }}"
+                                class="nav-link {{ request()->routeIs('sales.index') ? 'active' : '' }}">
+
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sales History</p>
+
+                            </a>
+                        </li>
+
+                        {{-- Sale Create --}}
+                        <li class="nav-item">
+                            <a href="{{ route('sales.create') }}"
+                                class="nav-link {{ request()->routeIs('sale.create') ? 'active' : '' }} ">
+                                 <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    Create Sales
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
 
             </ul>
+
+
+
         </nav>
         <!-- /.sidebar-menu -->
     </div>
