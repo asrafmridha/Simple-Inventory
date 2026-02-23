@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Admin\Purchase\PurchaseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,12 +11,16 @@ Route::get('/', function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/dashboard',function(){
+    Route::get('/dashboard', function () {
         return view('admin.layouts.master');
     })->name('dashboard');
 
 
+    Route::resource('products', ProductController::class);
 
+    Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('/purchases-create', [PurchaseController::class, 'create'])->name('purchases.create');
+    Route::post('/purchases-store', [PurchaseController::class, 'store'])->name('purchases.store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -23,4 +29,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

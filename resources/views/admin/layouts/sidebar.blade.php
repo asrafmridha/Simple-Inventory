@@ -39,12 +39,53 @@
 
 
                 <li class="nav-item">
-                    <a href="" class="nav-link {{ request()->is('generalSetting*') ? 'active' : '' }} ">
+                    <a href="{{ route('products.index') }}"
+                        class="nav-link {{ request()->is('products*') ? 'active' : '' }} ">
                         <i class="fa-solid fa-calendar-plus"></i>
                         <p>
                             Product
                         </p>
                     </a>
+                </li>
+                <li class="nav-item has-treeview
+    {{ request()->is('purchases*') ? 'menu-open' : '' }}">
+
+                    <a href="#" class="nav-link
+        {{ request()->is('purchases*') ? 'active' : '' }}">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        <p>
+                            Purchase
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        {{-- Purchase History --}}
+                        <li class="nav-item">
+                            <a href="{{ route('purchases.index') }}"
+                                class="nav-link {{ request()->routeIs('purchases.index') ? 'active' : '' }}">
+
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Purchase History</p>
+
+                            </a>
+                        </li>
+
+                        {{-- Purchase Create --}}
+                        <li class="nav-item">
+                            <a href="{{ route('purchases.create') }}"
+                                class="nav-link {{ request()->routeIs('purchases.create') ? 'active' : '' }}">
+
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Create Purchase</p>
+
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
 
 

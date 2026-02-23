@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Purchase extends Model
 {
-    //
+    protected $guarded = [];
+
+    public function items()
+    {
+        return $this->hasMany(PurchaseItem::class);
+    }
 }

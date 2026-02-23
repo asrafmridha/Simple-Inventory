@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('ledger_entries', function (Blueprint $table) {
             $table->id();
-            $table->string('purchase_no')->nullable();
-            $table->string('supplier_name')->nullable();
-            $table->decimal('total_amount', 10, 2)->nullable();
-            $table->date('date')->nullable();
+            $table->string('account'); // Cash, Inventory, Sales
+            $table->decimal('debit', 12, 2)->default(0);
+            $table->decimal('credit', 12, 2)->default(0);
+            $table->string('reference')->nullable();
+            $table->date('date');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('ledger_entries');
     }
 };
